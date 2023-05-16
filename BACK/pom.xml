@@ -11,7 +11,7 @@
     <groupId>com.icesi.auth_provider</groupId>
     <artifactId>auth_provider</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>auth_provider</name>
     <description>Demo project for Spring Boot</description>
     <properties>
