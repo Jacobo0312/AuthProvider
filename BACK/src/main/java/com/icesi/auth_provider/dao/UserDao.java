@@ -9,8 +9,8 @@ public interface UserDao {
     List<UserModel> getUsers();
     UserModel getUser(Long id);
     void deleteUser(Long id);
-    UserModel saveUser(UserModel user);
-    UserModel updateUser(UserModel user);
-    UserModel verifyCredentials(UserModel user);
+    UserModel signUp(UserModel user);
+    UserModel changePassword(UserModel user);
 
+    UserModel login(UserModel user);
 }

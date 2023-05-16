@@ -31,10 +31,22 @@ public class UserController {
         userDao.deleteUser(id);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/users")
-    public UserModel saveUser(@RequestBody UserModel user) {
-        return userDao.saveUser(user);
+    @RequestMapping(method = RequestMethod.POST, value = "/login")
+    public UserModel login(@RequestBody UserModel user) {
+        return userDao.login(user);
     }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/signup")
+    public UserModel signUp(@RequestBody UserModel user) {
+        return userDao.signUp(user);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/changePassword")
+    public UserModel changePassword(@RequestBody UserModel user) {
+        return userDao.changePassword(user);
+    }
+
+
 
 
 }

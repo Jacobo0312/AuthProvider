@@ -37,8 +37,32 @@ public class UserDaoImp implements UserDao {
         entityManager.remove(user);
     }
 
+
     @Override
-    public UserModel saveUser(UserModel user) {
+    public UserModel changePassword(UserModel user) {
+        String hash = Hashing.sha256()
+                .hashString(user.getPassword(), StandardCharsets.UTF_8)
+                .toString();
+
+        String query = "FROM UserModel WHERE username = :username";
+
+        List<UserModel> users = entityManager.createQuery(query)
+                .setParameter("username", user.getPassword())
+                .getResultList();
+
+        if (!users.isEmpty()) {
+             user = users.get(0);
+            user.setPassword(hash);
+            entityManager.persist(user);
+            return user;
+        }
+
+        return null;
+
+    }
+
+    @Override
+    public UserModel signUp(UserModel user) {
 
         //Hash password
         String hash = Hashing.sha256()
@@ -47,32 +71,34 @@ public class UserDaoImp implements UserDao {
 
         user.setPassword(hash);
 
+        user.setLastLogin(new java.util.Date());
+
         entityManager.persist(user);
         return user;
     }
 
-    @Override
-    public UserModel updateUser(UserModel user) {
-        entityManager.merge(user);
-        return user;
-    }
 
     @Override
-    public UserModel verifyCredentials(UserModel user) {
+    public UserModel login(UserModel user) {
         String hash = Hashing.sha256()
                 .hashString(user.getPassword(), StandardCharsets.UTF_8)
                 .toString();
-        user.setPassword(hash);
 
-
-        String query = "FROM UserModel WHERE email = :email AND password = :password";
+        String query = "FROM UserModel WHERE username = :username AND password = :password";
 
         List<UserModel> users = entityManager.createQuery(query)
-                .setParameter("email", user.getEmail())
-                .setParameter("password", user.getPassword())
+                .setParameter("username", user.getUsername())
+                .setParameter("password", hash)
                 .getResultList();
 
-        return !users.isEmpty() ? users.get(0) : null;
+        user = !users.isEmpty() ? users.get(0) : null;
+
+        if (user != null) {
+            user.setLastLogin(new java.util.Date());
+            entityManager.persist(user);
+        }
+
+        return user;
     }
 
 
