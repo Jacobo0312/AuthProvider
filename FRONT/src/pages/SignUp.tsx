@@ -11,16 +11,15 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Navigate } from 'react-router-dom';
-
+import { useState } from 'react';
 
 
 const theme = createTheme();
 
 export default function SignUp() {
 
- 
-
-
+  const[username, setUsername] = useState("");
+  const[password, setPassword] = useState("");
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -60,6 +59,7 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  onChange={(event)=> setUsername(event.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -71,6 +71,7 @@ export default function SignUp() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  onChange={(event)=> setPassword(event.target.value)}
                 />
               </Grid>
             </Grid>
