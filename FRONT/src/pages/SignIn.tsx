@@ -11,21 +11,40 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
+import UserService from '../services/users.services';
+import { User } from '../interfaces/User';
 
 const theme = createTheme();
 
 export default function SignIn() {
+
+  const userService = new UserService();
 
   const[username, setUsername] = useState("");
   const[password, setPassword] = useState("");
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const userCredentials:User = {
+      username: username,
+      password: password,
+    }
+    console.log(userCredentials);
+    userService.login(userCredentials).then((response) => {
+      const user = response as User;
+
+
+    if(user){
+      localStorage.setItem("user", JSON.stringify(user));
+      window.location.href = "/Home";
+    }else{
+      alert("Invalid credentials");
+    }
+
+    })
+
+
+
   };
 
   return (
