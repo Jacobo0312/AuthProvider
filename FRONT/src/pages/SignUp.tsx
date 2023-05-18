@@ -14,6 +14,7 @@ import { Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import { User } from '../interfaces/User';
 import UserService from '../services/users.services';
+import { Alert } from '@mui/material';
 
 
 const theme = createTheme();
@@ -35,6 +36,11 @@ export default function SignUp() {
       return;
     }
 
+    if (username.length == 0 && password.length == 0 && confirmPassword.length == 0) {
+      alert("Please fill all the fields");
+      return;
+    }
+
     const userCredentials:User = {
       username: username,
       password: password,
@@ -46,10 +52,13 @@ export default function SignUp() {
       if(user){
         localStorage.setItem("user", JSON.stringify(user));
         window.location.href = "/Home";
-      }else{
-        alert("Invalid credentials");
       }
     })
+    .catch((error) => {
+      alert("Username already exists");
+    }
+    )
+
   };
 
   return (

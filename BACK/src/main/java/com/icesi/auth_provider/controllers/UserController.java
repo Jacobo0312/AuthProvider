@@ -33,7 +33,11 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/login")
     public UserModel login(@RequestBody UserModel user) {
-        return userDao.login(user);
+        try {
+            return userDao.login(user);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/signup")

@@ -63,19 +63,28 @@ public class UserDaoImp implements UserDao {
 
     @Override
     public UserModel signUp(UserModel user) {
+        UserModel existingUser = entityManager.createQuery("SELECT u FROM UserModel u WHERE u.username = :username", UserModel.class)
+                .setParameter("username", user.getUsername())
+                .getResultList()
+                .stream()
+                .findFirst()
+                .orElse(null);
 
-        //Hash password
+        if (existingUser != null) {
+            throw new IllegalArgumentException("El nombre de usuario ya está en uso");
+        }
+
         String hash = Hashing.sha256()
                 .hashString(user.getPassword(), StandardCharsets.UTF_8)
                 .toString();
 
         user.setPassword(hash);
-
         user.setLastLogin(new java.util.Date());
 
         entityManager.persist(user);
         return user;
     }
+
 
 
     @Override

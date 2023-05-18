@@ -25,6 +25,12 @@ export default function SignIn() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (username.length == 0 && password.length == 0) {
+      alert("Please fill all the fields");
+      return;
+    }
+
     const userCredentials:User = {
       username: username,
       password: password,
