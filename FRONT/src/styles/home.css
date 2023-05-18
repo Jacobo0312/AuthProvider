@@ -1,0 +1,17 @@
+.Home{
+    text-align: center;
+}
+
+.Button-spacing{
+    margin-right: 20px;
+}
+
+.TextFields-container{
+    display: grid;
+    gap: 10px;
+}
+
+.TextFields{
+    width: 10%;
+}
+
