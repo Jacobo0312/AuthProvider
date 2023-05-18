@@ -12,22 +12,44 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Navigate } from 'react-router-dom';
 import { useState } from 'react';
+import { User } from '../interfaces/User';
+import UserService from '../services/users.services';
 
 
 const theme = createTheme();
 
 export default function SignUp() {
 
+  const userService = new UserService();
+
+
   const[username, setUsername] = useState("");
   const[password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+    if (password !== confirmPassword) {
+      alert("Passwords don't match");
+      return;
+    }
+
+    const userCredentials:User = {
+      username: username,
+      password: password,
+    }
+    console.log(userCredentials);
+    userService.signUp(userCredentials).then((response) => {
+      const user = response as User;
+      console.log(user);
+      if(user){
+        localStorage.setItem("user", JSON.stringify(user));
+        window.location.href = "/Home";
+      }else{
+        alert("Invalid credentials");
+      }
+    })
   };
 
   return (
@@ -55,10 +77,10 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
+                  id="username"
+                  label="Username"
+                  name="username"
+                  autoComplete="username"
                   onChange={(event)=> setUsername(event.target.value)}
                 />
               </Grid>
@@ -72,6 +94,18 @@ export default function SignUp() {
                   id="password"
                   autoComplete="new-password"
                   onChange={(event)=> setPassword(event.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="Confirm password"
+                  label="Confirm password"
+                  type="password"
+                  id="confPassword"
+                  autoComplete="new-password"
+                  onChange={(event)=> setConfirmPassword(event.target.value)}
                 />
               </Grid>
             </Grid>

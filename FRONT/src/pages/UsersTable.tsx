@@ -1,29 +1,37 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Table from "../components/Table";
+import UserService from "../services/users.services";
+import { User } from "../interfaces/User";
 
-class UsersTable extends React.Component{
-    render(){
-        
+const UsersTable = () =>{
+
+      const userService = new UserService();
+      const [users, setUsers] = React.useState<User[]>([]);
+
+      useEffect(() => {
+        userService.getUsers().then((response) => {
+          const users = response as  User[]; 
+          console.log(users);
+          setUsers(users);
+        })
+      }, [])
+      
     
-    const data = [
-        { name: 'John', age: 25, address: { city: 'New York', country: 'USA' } },
-        { name: 'Alice', age: 30, address: { city: 'London', country: 'UK' } },
-        { name: 'Bob', age: 35, address: { city: 'Paris', country: 'France' } },
-      ];
   
       const columns = [
-        { heading: 'Name', value: 'name' },
-        { heading: 'Age', value: 'age' },
-        { heading: 'City', value: 'address.city' },
+        { heading: 'ID', value: 'id' },
+        { heading: 'Username', value: 'username' },
+        { heading: 'Password', value: 'password' },
+        { heading: 'Last Login', value: 'lastLogin' },
       ];
 
     return(
         <div className="Table" >
             <h1>Users Table</h1>
-            <Table data={data} column={columns}></Table>
+            <Table data={users} column={columns}></Table>
         </div>
         );
     }
-}
+
 
 export default UsersTable;
