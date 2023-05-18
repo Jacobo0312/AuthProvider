@@ -3,6 +3,8 @@ import { Modal } from "@mui/material";
 
 import dayjs from "dayjs";
 import { useState } from "react";
+import ChangePassword from "./ChangePassword";
+
 
 const formatLastLogin = (date: Date) => {
   const formattedDate = dayjs(date).format("YYYY-MM-DD HH:mm");
@@ -33,9 +35,11 @@ const Home = () => {
           <p>Username: {user.username}</p>
           <p>Last Login: {lastLogin}</p>
           <button onClick={handleOpen}>Cambiar contraseña</button>
-          {/* <Modal open={open} onClose={handleClose}>
-             //Agregar modal que pida la contraseña y la nueva
-          </Modal> */}
+          <div className="container_modal">
+          <Modal open={open} onClose={handleClose}>
+            <ChangePassword/>
+          </Modal>
+          </div>
         </div>
       )}
     </div>
