@@ -27,7 +27,7 @@ const UsersTable = () =>{
 
     return(
         <div className="Table" >
-            <h1>Users Table</h1>
+            <h1 className="Table-title">Users Table</h1>
             <Table data={users} column={columns}></Table>
         </div>
         );
