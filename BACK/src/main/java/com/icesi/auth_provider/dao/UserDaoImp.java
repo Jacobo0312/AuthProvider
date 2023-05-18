@@ -90,7 +90,7 @@ public class UserDaoImp implements UserDao {
                 .setParameter("username", user.getUsername())
                 .setParameter("password", hash)
                 .getResultList();
-
+        
         user = !users.isEmpty() ? users.get(0) : null;
 
         if (user != null) {
