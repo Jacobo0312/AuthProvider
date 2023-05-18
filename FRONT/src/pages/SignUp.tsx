@@ -10,11 +10,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import { User } from '../interfaces/User';
 import UserService from '../services/users.services';
-import { Alert } from '@mui/material';
 
 
 const theme = createTheme();

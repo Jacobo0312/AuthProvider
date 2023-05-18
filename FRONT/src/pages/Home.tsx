@@ -4,8 +4,12 @@ import { Button } from "@mui/material";
 import {TextField} from "@mui/material";
 import React from "react";
 
+import { Modal } from "@mui/material";
 
 import dayjs from "dayjs";
+import { useState } from "react";
+import ChangePassword from "./ChangePassword";
+
 
 const formatLastLogin = (date: Date) => {
   const formattedDate = dayjs(date).format("YYYY-MM-DD HH:mm");
@@ -19,6 +23,14 @@ const Home = () => {
 
   const handleButtonClick = () => {
     setShowTextFields(true);
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   const userString = localStorage.getItem("user");
@@ -44,6 +56,12 @@ const Home = () => {
               <TextField label="New password" />
             </div>
           )}
+          <button onClick={handleOpen}>Cambiar contraseña</button>
+          <div className="container_modal">
+          <Modal open={open} onClose={handleClose}>
+            <ChangePassword/>
+          </Modal>
+          </div>
         </div>
       )}
     </div>
