@@ -1,15 +1,13 @@
 import { User } from "../interfaces/User";
 import '../styles/home.css';
 import { Button } from "@mui/material";
-import {TextField} from "@mui/material";
-import React from "react";
-
 import { Modal } from "@mui/material";
-
 import dayjs from "dayjs";
 import { useState } from "react";
 import ChangePassword from "./ChangePassword";
-
+import { useNavigate } from 'react-router-dom';
+import {Alert} from "@mui/material";
+import {Snackbar} from "@mui/material";
 
 const formatLastLogin = (date: Date) => {
   const formattedDate = dayjs(date).format("YYYY-MM-DD HH:mm");
@@ -19,10 +17,19 @@ const formatLastLogin = (date: Date) => {
 
 
 const Home = () => {
-  const [showTextFields, setShowTextFields] = React.useState(false);
 
-  const handleButtonClick = () => {
-    setShowTextFields(true);
+  const navigate = useNavigate();
+ 
+
+  const handleLogout = () =>{
+    localStorage.removeItem('lastLogin');
+    localStorage.removeItem('user');
+    alert("La sesión ha sido cerrada correctamente");
+    navigate("/");
+   
+      
+  };
+  
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -43,29 +50,22 @@ const Home = () => {
       <h1>Home</h1>
       {user && (
         <div>
-          <p>Username: {user.username}</p>
-          <p>Last Login: {lastLogin}</p>
+          <p className="userL">Username: {user.username}</p>
+          <p className="lastL"> Last Login: {lastLogin}</p>
           <div className="Buttons-div">
-          <Button variant="contained" onClick={handleButtonClick}>Change Password</Button>
+          <Button variant="contained" onClick={handleOpen}>Change Password</Button>
           <span className="Button-spacing"></span>
-          <Button variant="contained" color="error">Log out</Button>
+          <Button variant="contained" onClick={handleLogout} color="error">Log out</Button>
           </div>
-          {showTextFields && (
-            <div className="TextFields-container">
-              <TextField label="Current password" />
-              <TextField label="New password" />
-            </div>
-          )}
-          <button onClick={handleOpen}>Cambiar contraseña</button>
-          <div className="container_modal">
+          {<div className="container_modal">
           <Modal open={open} onClose={handleClose}>
             <ChangePassword/>
           </Modal>
-          </div>
+          </div>}
         </div>
       )}
     </div>
   );
-};
+}
 
 export default Home;
