@@ -1,35 +1,33 @@
 import { User } from "../interfaces/User";
-import '../styles/home.css';
+import "../styles/home.css";
 import { Button } from "@mui/material";
 import { Modal } from "@mui/material";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ChangePassword from "./ChangePassword";
-import { useNavigate } from 'react-router-dom';
-import {Alert} from "@mui/material";
-import {Snackbar} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import UserService from "../services/users.services";
 
 const formatLastLogin = (date: Date) => {
   const formattedDate = dayjs(date).format("YYYY-MM-DD HH:mm");
   return formattedDate;
 };
 
-
-
 const Home = () => {
-
   const navigate = useNavigate();
- 
+  const userService = new UserService();
+  const [user, setUser] = useState<User | null>(null);
 
-  const handleLogout = () =>{
-    localStorage.removeItem('lastLogin');
-    localStorage.removeItem('user');
+  const handleLogout = () => {
+    userService.logout();
     alert("La sesión ha sido cerrada correctamente");
     navigate("/");
-   
-      
   };
-  
+
+  const handleShowUsers = () => {
+    navigate("/users");
+  };
+
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -40,10 +38,18 @@ const Home = () => {
     setOpen(false);
   };
 
-  const userString = localStorage.getItem("user");
-  const user: User | null = userString ? JSON.parse(userString) : null;
+  useEffect(() => {
+    const username = localStorage.getItem("username");
 
-  const lastLogin = user ? formatLastLogin(user.lastLogin!) : null;
+    if (username) {
+      userService.getUser(username).then((response) => {
+        const user = response as User;
+        console.log(user);
+        setUser(user);
+        localStorage.setItem("user", JSON.stringify(user));
+      });
+    }
+  }, []);
 
   return (
     <div className="Home">
@@ -51,21 +57,36 @@ const Home = () => {
       {user && (
         <div>
           <p className="userL">Username: {user.username}</p>
-          <p className="lastL"> Last Login: {lastLogin}</p>
+          <p className="lastL">
+            {" "}
+            Last Login: {formatLastLogin(user.lastLogin!)}
+          </p>
           <div className="Buttons-div">
-          <Button variant="contained" onClick={handleOpen}>Change Password</Button>
-          <span className="Button-spacing"></span>
-          <Button variant="contained" onClick={handleLogout} color="error">Log out</Button>
+            <Button variant="contained" onClick={handleOpen}>
+              Change Password
+            </Button>
+            <span className="Button-spacing"></span>
+            <Button variant="contained" onClick={handleLogout} color="error">
+              Log out
+            </Button>
+            <span className="Button-spacing"></span>
+            {user.username === "admin" && (
+              <Button variant="contained" color="success" onClick={handleShowUsers} >
+                Show users
+              </Button>
+            )}
           </div>
-          {<div className="container_modal">
-          <Modal open={open} onClose={handleClose}>
+          {
+            <div className="container_modal">
+              <Modal open={open} onClose={handleClose}>
             <ChangePassword/>
           </Modal>
-          </div>}
+            </div>
+          }
         </div>
       )}
     </div>
   );
-}
+};
 
 export default Home;

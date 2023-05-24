@@ -1,6 +1,7 @@
 import React from 'react';
 import '../styles/table.css';
 import { Button } from '@mui/material';
+import UserService from '../services/users.services';
 
 interface TableColumn {
   heading: string;
@@ -10,6 +11,7 @@ interface TableColumn {
 interface TableProps {
   data: any[];
   column: TableColumn[];
+  handleDelete: (item:any) => void;
 }
 
 interface TableHeadItemProps {
@@ -19,9 +21,23 @@ interface TableHeadItemProps {
 interface TableRowProps {
   item: any;
   column: TableColumn[];
+  handleDelete: (item:any) => void;
 }
 
 const Table: React.FC<TableProps> = ({ data, column }) => {
+
+  const userService = new UserService();
+
+  const handleDelete = (item:any) => {
+    userService.deleteUser(item.username).then((response) => {
+
+    if(response.status===204){
+      alert("User deleted");
+      window.location.reload();
+    }
+  })
+
+  }
   return (
     <table>
       <thead>
@@ -33,7 +49,7 @@ const Table: React.FC<TableProps> = ({ data, column }) => {
       </thead>
       <tbody>
         {data.map((item, index) => (
-          <TableRow key={index} item={item} column={column}/>
+          <TableRow key={index} item={item} column={column} handleDelete={handleDelete}/>
         ))}
         
       </tbody>
@@ -45,7 +61,7 @@ const TableHeadItem: React.FC<TableHeadItemProps> = ({ item }) => (
   <th>{item.heading}</th>
 );
 
-const TableRow: React.FC<TableRowProps> = ({ item, column }) => (
+const TableRow: React.FC<TableRowProps> = ({ item, column,handleDelete }) => (
   <tr>
     {column.map((columnItem, index) => {
       if (columnItem.value.includes('.')) {
@@ -55,7 +71,7 @@ const TableRow: React.FC<TableRowProps> = ({ item, column }) => (
       return <td key={index}>{item[columnItem.value]}</td>;
     })}
     <td>
-      <Button variant='contained' color='error'>Delete</Button>
+      <Button onClick={()=>handleDelete(item)}variant='contained' color='error'>Delete</Button>
     </td>
   </tr>
 );

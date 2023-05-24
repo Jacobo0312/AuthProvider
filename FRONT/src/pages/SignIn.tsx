@@ -13,17 +13,20 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
 import UserService from '../services/users.services';
 import { User } from '../interfaces/User';
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
 export default function SignIn() {
 
   const userService = new UserService();
+  const navigate = useNavigate();
+
 
   const[username, setUsername] = useState("");
   const[password, setPassword] = useState("");
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async  (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (username.length == 0 && password.length == 0) {
@@ -36,20 +39,20 @@ export default function SignIn() {
       password: password,
     }
     console.log(userCredentials);
-    userService.login(userCredentials).then((response) => {
-      const user = response as User;
 
+    try{
 
-    if(user){
-      localStorage.setItem("user", JSON.stringify(user));
-      window.location.href = "/Home";
+    const response =await userService.login(userCredentials)
+
+    if(response.status===200){
+        localStorage.setItem("username", username);
+       navigate("/home");
     }else{
-      alert("Invalid credentials");
+      alert("Username or password incorrect");
     }
-
-    })
-
-
+  }catch(error){
+    alert("Username or password incorrect");
+  }
 
   };
 

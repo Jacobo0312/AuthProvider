@@ -13,6 +13,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
 import { User } from '../interfaces/User';
 import UserService from '../services/users.services';
+import { useNavigate } from 'react-router-dom';
 
 
 const theme = createTheme();
@@ -20,7 +21,7 @@ const theme = createTheme();
 export default function SignUp() {
 
   const userService = new UserService();
-
+  const navigate = useNavigate();
 
   const[username, setUsername] = useState("");
   const[password, setPassword] = useState("");
@@ -45,11 +46,10 @@ export default function SignUp() {
     }
     console.log(userCredentials);
     userService.signUp(userCredentials).then((response) => {
-      const user = response as User;
-      console.log(user);
-      if(user){
-        localStorage.setItem("user", JSON.stringify(user));
-        window.location.href = "/Home";
+
+      if(response.status===200){
+        localStorage.setItem("username", username);
+        navigate("/home");
       }
     })
     .catch((error) => {

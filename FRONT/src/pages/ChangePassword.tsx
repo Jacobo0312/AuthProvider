@@ -12,6 +12,8 @@ import { useState } from 'react';
 import UserService from '../services/users.services';
 import { User } from '../interfaces/User';
 import '../styles/ChangePassword.css'
+import { ChangePasswordRequest } from '../interfaces/ChangePasswordRequest';
+import { useNavigate } from 'react-router-dom';
 
  
 
@@ -19,6 +21,7 @@ import '../styles/ChangePassword.css'
 export default function ChangePassword() {
 
   const userService = new UserService();
+  const naivgate = useNavigate();
 
   const[password, setPassword] = useState("");
   const[newPassword, setNewPassword] = useState("");
@@ -33,19 +36,38 @@ export default function ChangePassword() {
       return;
     }
 
+    if (newPassword !== confNewPassword) {
+      alert("Passwords don't match");
+      return;
+    }
 
-    // userService.changePassword(userCredentials).then((response) => {
-    //   const user = response as User;
+    const changePassword:ChangePasswordRequest = {
+      password: password,
+      newPassword: newPassword,
+    }
+
+    const username = localStorage.getItem("username");
+
+    if (!username) {
+      alert("Error");
+      return;
+    }
 
 
-    // if(user){
-    //   localStorage.setItem("user", JSON.stringify(user));
-    //   window.location.href = "/Home";
-    // }else{
-    //   alert("Invalid credentials");
-    // }
+    userService.changePassword(username,changePassword).then((response) => {
+      const user = response as User;
 
-    // })
+
+    if(user){
+      localStorage.setItem("user", JSON.stringify(user));
+      alert("Password changed successfully");
+      naivgate("/home");
+      
+    }else{
+      alert("Invalid credentials");
+    }
+
+    })
 
 
 

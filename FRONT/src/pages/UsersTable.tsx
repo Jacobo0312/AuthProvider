@@ -19,7 +19,6 @@ const UsersTable = () =>{
     
   
       const columns = [
-        { heading: 'ID', value: 'id' },
         { heading: 'Username', value: 'username' },
         { heading: 'Password', value: 'password' },
         { heading: 'Last Login', value: 'lastLogin' },
