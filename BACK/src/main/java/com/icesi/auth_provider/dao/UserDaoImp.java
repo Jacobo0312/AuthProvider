@@ -28,40 +28,48 @@ public class UserDaoImp implements UserDao {
     }
 
     @Override
-    public UserModel getUser(Long id) {
-        return entityManager.find(UserModel.class, id);
+    public UserModel getUser(String username) {
+        return entityManager.find(UserModel.class, username);
     }
 
     @Override
-    public void deleteUser(Long id) {
-        UserModel user = entityManager.find(UserModel.class, id);
+    public void deleteUser(String username) {
+        UserModel user = entityManager.find(UserModel.class, username);
         entityManager.remove(user);
     }
 
 
     @Override
-    public UserModel changePassword(UserModel user) {
-        String hash = null;
-        try {
-            hash = HashPBKDF2.generateStrongPasswordHash(user.getPassword());
+    public UserModel changePassword(UserModel user,String password,String newPassword) {
+
+        boolean validation = false;
+         try {
+              validation = HashPBKDF2.validatePassword(password, user.getPassword());
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         } catch (InvalidKeySpecException e) {
             throw new RuntimeException(e);
         }
 
-        String query = "FROM UserModel WHERE username = :username";
+         if (!validation) {
+             throw new RuntimeException("Invalid password");
+         }
 
-        List<UserModel> users = entityManager.createQuery(query)
-                .setParameter("username", user.getPassword())
-                .getResultList();
 
-        if (!users.isEmpty()) {
-            user = users.get(0);
-            user.setPassword(hash);
-            entityManager.persist(user);
-            return user;
+        String hash = null;
+        try {
+            hash = HashPBKDF2.generateStrongPasswordHash(newPassword);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidKeySpecException e) {
+            throw new RuntimeException(e);
         }
+
+        user.setPassword(hash);
+        entityManager.merge(user);
+        
+
+
 
         return null;
 

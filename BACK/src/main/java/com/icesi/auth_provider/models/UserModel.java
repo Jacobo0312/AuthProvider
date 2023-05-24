@@ -10,10 +10,7 @@ import java.util.Date;
 @Table(name="users")
 public class UserModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false, updatable = false)
-    private Long id;
-    @Column(name="username", nullable = false)
+    @Column(name = "username", nullable = false, updatable = false)
     private String username;
 
     @Column(name="password", nullable = false)
