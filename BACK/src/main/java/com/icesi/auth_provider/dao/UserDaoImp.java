@@ -19,7 +19,7 @@ public class UserDaoImp implements UserDao {
 
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     @Override
     public List<UserModel> getUsers() {
@@ -69,9 +69,7 @@ public class UserDaoImp implements UserDao {
         entityManager.merge(user);
         
 
-
-
-        return null;
+        return user;
 
     }
 
