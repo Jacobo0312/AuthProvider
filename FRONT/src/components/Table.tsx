@@ -24,20 +24,8 @@ interface TableRowProps {
   handleDelete: (item:any) => void;
 }
 
-const Table: React.FC<TableProps> = ({ data, column }) => {
+const Table: React.FC<TableProps> = ({ data, column,handleDelete }) => {
 
-  const userService = new UserService();
-
-  const handleDelete = (item:any) => {
-    userService.deleteUser(item.username).then((response) => {
-
-    if(response.status===204){
-      alert("User deleted");
-      window.location.reload();
-    }
-  })
-
-  }
   return (
     <table>
       <thead>

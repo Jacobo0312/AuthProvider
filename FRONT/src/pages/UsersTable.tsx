@@ -8,6 +8,17 @@ const UsersTable = () =>{
       const userService = new UserService();
       const [users, setUsers] = React.useState<User[]>([]);
 
+      const handleDelete = (item:any) => {
+        userService.deleteUser(item.username).then((response) => {
+    
+        if(response.status===204){
+          alert("User deleted");
+          window.location.reload();
+        }
+      })
+    
+      }
+
       useEffect(() => {
         userService.getUsers().then((response) => {
           const users = response as  User[]; 
@@ -27,7 +38,7 @@ const UsersTable = () =>{
     return(
         <div className="Table" >
             <h1 className="Table-title">Users Table</h1>
-            <Table data={users} column={columns}></Table>
+            <Table data={users} column={columns} handleDelete={handleDelete}></Table>
         </div>
         );
     }
