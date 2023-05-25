@@ -5,7 +5,7 @@ import axios, { Axios, AxiosResponse } from "axios";
 export default class UserService {
   // Configurar axios
   api = axios.create({
-    baseURL: "http://localhost:8080",
+    baseURL: "http://seguridad.controld.live:8080",
   });
 
   private saveToken(token: string) {
