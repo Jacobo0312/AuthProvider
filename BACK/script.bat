@@ -1,7 +1,7 @@
 @echo off
 
 REM Maven Wrapper Clean
-.\mvnw.cmd clean package -DskipTests
+call .\mvnw.cmd clean package -DskipTests
 
 REM Docker Compose
-docker-compose up
+call docker-compose up
